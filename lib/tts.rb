@@ -50,7 +50,9 @@ module Tts
   end
 
   def generate_file_name
-    to_valid_fn + ".mp3"
+    datetime = DateTime.now.to_s.scan(/\d/)
+    # to_valid_fn + ".mp3"
+    datetime + '.mp3'
   end
 
   def to_valid_fn
@@ -65,7 +67,8 @@ module Tts
 
   def fetch_mp3 url, file_name
     begin
-      content = URI.open(url, "User-Agent" => @@user_agent, "Referer" => @@referer).read
+      # content = URI.open(url, "User-Agent" => @@user_agent, "Referer" => @@referer).read
+      content = URI.open(url).read
 
       File.open(temp_file_name, "wb") do |f|
         f.puts content
@@ -101,6 +104,12 @@ module Tts
     File.delete(play_file_name)
   end
 
+end
+
+module URI
+  def self.escape(url)
+    encode_www_form_component(url)
+  end
 end
 
 class String
